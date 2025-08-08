@@ -1,0 +1,18 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Backend
+env
+backend/.env
+backend/__pycache__/
+backend/wishlist.db
+backend/static/
+backend/data/
+
+notes.txt
+.env
+.idea/
+.vscode/
+.DS_Store
