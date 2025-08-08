@@ -11,30 +11,32 @@ from models import Gift, EventInfo
 from schemas import AllInfoOut, GiftOut
 
 
+load_dotenv()
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
+DOMAIN = os.getenv("DOMAIN")
 USER_TYPE = 1
 ADMIN_TYPE = 2
-
+if not ACCESS_TOKEN:
+    raise ValueError("ACCESS_TOKEN не установлен")
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://0.0.0.0",
-        "http://localhost"
+        "http://localhost",
+        f"https://{DOMAIN}",
+        f"https://www.{DOMAIN}",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-load_dotenv()
-ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
-if not ACCESS_TOKEN:
-    raise ValueError("ACCESS_TOKEN не установлен")
+UPLOAD_DIR = "static/images"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 def get_db():
@@ -55,10 +57,6 @@ def verify_token(x_token: str = Header(..., alias="X-ACCESS-TOKEN")):
         return ADMIN_TYPE
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token")
-
-
-UPLOAD_DIR = "static/images"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 @app.post("/api/auth")
