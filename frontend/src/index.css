@@ -341,6 +341,7 @@ body::before {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease-out;
+  pointer-events: auto;
 }
 
 .modal, .auth-container {
